@@ -1,0 +1,59 @@
+#signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: red; */
+  width: 97vw;
+  height: 90vh;
+}
+.card {
+  height: 370px;
+  width: 350px;
+  background-color: #fff;
+  border: 2px solid black;
+  padding: 24px;
+  /* background-color: #252422; */
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.card h1,
+.logo {
+  align-self: center;
+}
+.t {
+  display: flex;
+  justify-content: space-between;
+}
+.divi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+input[type="email"],
+input[type="password"] {
+  text-align: center;
+  margin: 8px 0;
+}
+.btn {
+  text-decoration: none;
+  border: 2px solid black;
+  border-radius: 4px;
+  width: 64px;
+  text-align: center;
+  font-size: 1.2rem;
+  align-self: center;
+  font-weight: 700;
+  margin-top: 40px;
+}
+.btn:hover {
+  box-shadow: 0 0 10px black;
+}
+@media only screen and (max-width: 600px) {
+  .card {
+    height: 435px;
+    padding: 12px;
+    border: 0.2px solid black;
+    border-radius: 8px;
+  }
+}

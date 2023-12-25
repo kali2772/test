@@ -1,0 +1,226 @@
+/* =====================story======================= */
+#story {
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+.story {
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  border: 2px solid #252422;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 16px;
+}
+/* =====================post-card======================= */
+#post {
+  /* background-color: #b3adad; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#post p {
+  color: #fffcf2;
+}
+.post-card {
+  width: 500px;
+  /* height: 550px; */
+  background-color: #252422;
+  margin: 16px 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+.post-item {
+  margin-bottom: 4px;
+  background-color: #403d39;
+  /* border: 2px solid white; */
+  object-fit: cover;
+}
+.post-creator .user-name {
+  color: white;
+}
+.post-creator,
+.post-intr {
+  min-height: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+.post-creator {
+  justify-content: space-between;
+}
+.post-creator .linkeble {
+  display: flex;
+}
+.post-creator button {
+  filter: invert(1);
+  border: none;
+}
+.post-det {
+  /* min-height: 100px; */
+  max-height: 100px;
+  width: 100%;
+  background-color: transparent;
+}
+.post-img-contain {
+  min-height: 225px;
+  max-height: 550px;
+  border-radius: 4px;
+  object-fit: cover;
+  overflow: hidden;
+  position: relative;
+}
+.post-img {
+  object-fit: cover;
+  width: 484px;
+}
+.post-item .fullScreen{
+  position: absolute;
+  bottom: 0;
+right: 1px;
+margin: 8px;
+text-decoration: none;
+}
+.post-creator .user-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-color: wheat;
+}
+.post-intr {
+  align-items: normal;
+  justify-content: space-between;
+}
+.post-icon {
+  height: 32px;
+  width: 32px;
+  filter: invert(1);
+border: none;
+}
+.post-intr .intr-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-det p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @supports (-webkit-line-clamp: 2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+.post-det p span {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+.post-det .comment textarea::placeholder {
+  color: #000;
+}
+.post-det .comment {
+  /*  display: flex;
+  align-items: center;
+  justify-content: space-between; */
+  margin-top: 2px;
+  flex-wrap: wrap;
+  height: 79px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.post-det .comment-count {
+  opacity: 0.4;
+}
+.post-det .comment .commenti:focus {
+  outline: none;
+}
+.post-det .comment li p{
+  opacity: .8;
+}
+.post-det .comment li {
+  /*  width: 23%;*/
+  /* margin-bottom: -27px;  */
+  text-decoration: none;
+  color: #fffcf2;
+}
+.post-det .comment form {
+  transform: translate(110px, -26px);
+}
+.post-det .comment input[type="text"] {
+  text-align: left;
+}
+.post-det .comment ul {
+  margin-top: -30px;
+}
+.post-det .comment .commenti {
+  width: 77%;
+  color: #fffcf2;
+  background-color: transparent;
+  margin-top: 8px;
+  border: none;
+}
+.post-date {
+  opacity: 0.6;
+  text-align: right;
+}
+.post {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.full-commy,
+.full-discry {
+  max-height: 550px;
+  min-height: 431px;
+  width: 100%;
+  background-color: #252422;
+  padding: 8px;
+  margin: 16px 0;
+  display: none;
+}
+.full-commy {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.full-discry {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+@media only screen and (max-width: 600px) {
+  
+  #story {
+    width: 100%;
+    overflow: auto;
+  }
+  .story {
+    margin: 0 4px;
+  }
+  .post {
+    margin-left: 3px;
+  }
+  .post-card {
+    width: 376px;
+    margin: 8px 0;
+    padding: 4px;
+    border-radius: 8px;
+  }
+  .post-img {
+    width: 368px;
+  }
+  .post-img-contain {
+    min-height: auto;
+  }
+}

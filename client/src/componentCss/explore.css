@@ -1,0 +1,140 @@
+#main {
+  display: flex;
+  flex-direction: column;
+}
+.search {
+  padding: 2px;
+  align-self: center;
+  /* background-color: red; */
+  display: inline;
+  margin: 1rem;
+  text-align: center;
+  position: sticky;
+}
+.explorePOst {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: red; */
+  padding: 0 4px 4px 0px;
+}
+.explorePOst .expost {
+  width: 300px;
+  min-height: 250px;
+  max-height: 500px;
+  /* background-color: rgb(0, 13, 255); */
+  margin: 4px 0 0 4px;
+  position: relative;
+}
+.explorePOst .expost .expostImg {
+  min-height: 250px;
+  max-height: 500px;
+  width: 300px;
+  background-color: beige;
+  position: absolute;
+}
+.explorePOst .expost .postData {
+  position: absolute;
+  z-index: 1;
+  /* background: blue; */
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(1px 1px 0.5px);
+  padding: 4px;
+}
+
+.user-name {
+  color: white;
+}
+.user-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-color: wheat;
+}
+.post-main {
+  height: 92vh;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+.post-expostImg {
+  height: 44rem;
+  max-width: 69rem;
+}
+.comment-form {
+  width: 86%;
+}
+.post-secon {
+  width: 40%;
+}
+.post-firs {
+  /* width: 60%; */
+  flex-direction: column;
+}
+.post-userimg {
+  width: 56px;
+  height: auto;
+}
+.post-postData {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(1px 1px 0.5px);
+}
+ul {
+  list-style: none;
+}
+.post-text-comment {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-start;
+}
+.post-commenti {
+  width: 100%;
+  border-color: transparent transparent black transparent;
+  margin: 0;
+  text-align: left;
+}
+.posticonic {
+  filter: none;
+}
+.post-post-intr {
+  gap: 24px;
+  padding-top: 8px;
+}
+@media only screen and (max-width: 600px) {
+  #main{
+    padding-top: 10px;
+  }
+  body {
+    padding: 8px;
+    padding-top: 32px;
+    width: 100%;
+  }
+  .post {
+    margin-left: 3px;
+  }
+  .post-card {
+    width: 376px;
+    margin: 8px 0;
+    padding: 4px;
+    border-radius: 8px;
+  }
+  .nav-item {
+    width: 100%;
+  }
+  .explorePOst .expost {
+    width: 175px;
+  }
+  .explorePOst .expost .expostImg {
+    width: 175px;
+  }
+  hr {
+    margin: 8px;
+  }
+  .search {
+    margin: 0 0.5rem 0.5rem 0.5rem;
+  }
+}

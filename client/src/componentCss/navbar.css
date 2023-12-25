@@ -1,0 +1,125 @@
+#nav {
+  /* background-color: red; */
+  padding: 0 10px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.addp-logo {
+  height: 24px;
+  /* width: 24px; */
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-item {
+  list-style-type: none;
+  /* background-color: blue; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-item li {
+  margin: 0 10px;
+  cursor: pointer;
+}
+.nav-item li a,
+.nav-mid a {
+  text-decoration: none;
+  color: black;
+  /* color: rgba(255, 252, 242, 0.6); */
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  gap: 4px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+}
+.log {
+  margin-left: 30px;
+  display: flex;
+  align-items: center;
+}
+.nav-l-icons {
+  display: inline-flex;
+  margin-left: 8px;
+  background-color: #b3adad;
+  border-radius: 64px;
+}
+.notify,
+.menu {
+  padding: 6px 6px 2px 6px;
+}
+.nlicon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+/* ====================================== */
+#navm {
+  /* background-color: red; */
+  padding: 0 10px 10px 10px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+}
+.navm-logo {
+  height: 32px;
+  /* width: 24px; */
+}
+.navm-item {
+  list-style-type: none;
+  /* background-color: blue; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navm-item li {
+  margin: 0 10px;
+  cursor: pointer;
+}
+.navm-item li a,
+.navm-mid a {
+  text-decoration: none;
+  color: black;
+  /* color: rgba(255, 252, 242, 0.6); */
+}
+/* ====================================== */
+
+@media only screen and (max-width: 600px) {
+  #nav {
+    /* padding: 0px 1px 3px 0px; */
+    /* this for stick top navbar */
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+    padding: 8px 21px 3px 8px;
+    margin-top: -40px;
+    background: #ffffff;
+  }
+  .nav-item {
+    width: 100%;
+  }
+  .nav-mid,
+  .log,
+  .nav-item {
+    display: none;
+  }
+  #navm {
+    display: flex;
+    padding: 0px 1px 3px 0px;
+    position: fixed;
+    transform: translateY(47.5rem);
+    z-index: 2;
+    background: #ffffff;
+    width: 98%;
+  }
+  .navm-item {
+    width: 100%;
+    padding: 0px 1px 3px 0px;
+    margin-top: 5px;
+  }
+}
