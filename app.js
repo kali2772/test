@@ -26,10 +26,10 @@ app.use(require("./routes/user"));
 const path = require("path");
 const __dirname1 = path.resolve();
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/server/client/build")));
+  app.use(express.static(path.join(__dirname1, "/client/build")));
   app.get("*", (req, res) => {
     res.sendFile(
-      path.resolve(__dirname1, "server", "client", "build", "index.html")
+      path.resolve(__dirname1, "client", "build", "index.html")
     );
   });
 } else {
