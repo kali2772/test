@@ -23,7 +23,6 @@ app.use(require("./routes/auth"));
 app.use(require("./routes/post"));
 app.use(require("./routes/user"));
 
-
 const path = require("path");
 const __dirname1 = path.resolve();
 if (process.env.NODE_ENV === "production") {
