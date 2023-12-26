@@ -39,20 +39,3 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(PORT, () => console.log("server is running on", PORT));
-/* // bottom code (middleware) is likly to use authenticate your app
-    const custommiddleware = (req,res,next)=>{
-        console.log("middle finger is here")
-        next()
-    }
-    
-    // app.use(custommiddleware)        this for all route
-    
-    app.get('/',(req,res)=>{
-        res.send("hello")
-    })
-    app.get('/about',custommiddleware,(req,res)=>{
-        res.send("about")
-    })
-    app.get('/portfolio',(req,res)=>{
-        res.send("portfolio")
-    }) */
