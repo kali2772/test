@@ -58,7 +58,7 @@ const Profile = () => {
           console.log(err);
         });
       // console.log(url, "heloo");
-    }
+    } // eslint-disable-next-line
   }, [image]);
 
   const updatePic = (file) => {

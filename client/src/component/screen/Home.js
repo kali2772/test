@@ -1,12 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../App";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../../componentCss/home.css";
 
 const Home = () => {
   const [data, setData] = useState([]);
   // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
+
+  const showToast = (msg, toastType) => {
+    toast[toastType](msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
   useEffect(() => {
     fetch("/allpost", {
       headers: {

@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../componentCss/signin.css";
 
 const Signin = () => {
-  const {state,dispatch} = useContext(UserContext)
+  // eslint-disable-next-line
+  const { state, dispatch } = useContext(UserContext);
   const navicate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ const Signin = () => {
         } else {
           localStorage.setItem("jwt", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          dispatch({type:"USER",payload:data.user})
+          dispatch({ type: "USER", payload: data.user });
           // console.log(data);
           navicate("/");
         }

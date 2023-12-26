@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "../../componentCss/home.css";
 
 const Home = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
   useEffect(() => {
     fetch("/getsubspost", {
@@ -141,11 +141,12 @@ const Home = () => {
                     >
                       {item.postedBy.name}
                     </Link>
-                    {/* <div className="user-name">
-                    </div> */}
-                    {item.postedBy._id == state._id && (
-                      <button onClick={() => deletepost(item._id)}>d</button>
-                    )}
+                    {
+                      // eslint-disable-next-line
+                      item.postedBy._id == state._id && (
+                        <button onClick={() => deletepost(item._id)}>d</button>
+                      )
+                    }
                   </div>
                   <div className="post-item post-img-contain">
                     <img

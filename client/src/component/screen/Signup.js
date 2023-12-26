@@ -12,7 +12,7 @@ const Signup = () => {
   useEffect(() => {
     if (url) {
       uploadFields();
-    }
+    } // eslint-disable-next-line
   }, [url]);
   const uploadPic = () => {
     const data = new FormData();

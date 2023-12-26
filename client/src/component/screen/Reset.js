@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {useNavigate } from "react-router-dom";
 import "../../componentCss/signin.css";
 
 const Reset = () => {
@@ -43,20 +43,8 @@ const Reset = () => {
         />
 
         <br />
-        <div className="t">
-          <div className="r">
-            <input type="checkbox" name="" id="" />
-            <label for="">remember me</label>
-            <br />
-          </div>
-          <a href="#">forget password</a>
-        </div>
-        <div className="divi">
-          <hr width="100" />
-          <h2>or</h2>
-          <hr width="100" />
-        </div>
-        <button onClick={() => PostData()} className="btn">
+        
+        <button onClick={() => PostData()} className="btn" style={{width:"auto"}}>
           reset-password
         </button>
       </div>

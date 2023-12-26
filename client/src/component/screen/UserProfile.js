@@ -11,15 +11,15 @@ const Profile = () => {
   useEffect(() => {
     fetch(`/user/${userid}`, {
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("jwt"),
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
     })
       .then((res) => res.json())
       .then((result) => {
         // setpics(result.mypost);
         // console.log(result)
-        setProfile(result)
-      });
+        setProfile(result);
+      }); // eslint-disable-next-line
   }, []);
 
   const followUser = ()=>{
@@ -72,12 +72,15 @@ const Profile = () => {
         });
         localStorage.setItem("user", JSON.stringify(data));
         setProfile((prevState) => {
-          const newfFollower = prevState.user.followers.filter(item=>item != data._id)
+          const newfFollower = prevState.user.followers.filter(
+            // eslint-disable-next-line
+            (item) => item != data._id
+          );
           return {
             ...prevState,
             user: {
               ...prevState.user,
-              followers:newfFollower,
+              followers: newfFollower,
             },
           };
         });

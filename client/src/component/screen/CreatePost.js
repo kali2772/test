@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../componentCss/createpost.css";
 
 const CreatePost = () => {
@@ -22,11 +22,11 @@ const CreatePost = () => {
           title,
           body,
           pic: url,
-          cii
+          cii,
         }),
       })
         .then((res) => res.json())
-        .then(data => {
+        .then((data) => {
           if (data.error) {
             console.log(data);
           } else {
@@ -38,6 +38,7 @@ const CreatePost = () => {
           console.log(err);
         });
     }
+    // eslint-disable-next-line
   }, [url,cii]);
 
   const postDetails = () => {

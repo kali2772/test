@@ -5,7 +5,7 @@ import "../../componentCss/explore.css";
 
 const Explore = () => {
   const [data, setData] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
   useEffect(() => {
     fetch("/allpost", {

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../componentCss/signin.css";
 
 const NewPassword = () => {
