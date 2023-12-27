@@ -1,25 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../App";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import useBasicFunc from "../utility";
 import "../../componentCss/home.css";
 
 const Home = () => {
   const [data, setData] = useState([]);
   // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
-
-  const showToast = (msg, toastType) => {
-    toast[toastType](msg, {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  };
 
   useEffect(() => {
     fetch("/allpost", {
@@ -33,144 +21,76 @@ const Home = () => {
         setData(result.posts);
       });
   }, []);
+  const {
+    showToast,
+    share,
+    savePost,
+    likePost,
+    unlikePost,
+    deletepost,
+    makeComments,
+  } = useBasicFunc();
 
-  const savePost = (id) => {
-    fetch("/savepost", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
+  const handleLikePost = (postId) => {
+    likePost(postId)
       .then((result) => {
-        console.log("savepost", result);
+        updateStateAfterOperation(postId, result);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+  };
+  const handleUnlikePost = (postId) => {
+    unlikePost(postId)
+      .then((result) => {
+        updateStateAfterOperation(postId, result);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  const likePost = (id) => {
-    fetch("/like", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
+  const handleDeletePost = (postId,cii) => {
+    deletepost(postId,cii)
       .then((result) => {
-        const newData = data.map((item) => {
-          if (item._id === result.likes._id) {
-            return result.likes;
-          } else {
-            return item;
+       const newData = data.filter((item) => item._id !== result.deletionP._id);
+        setData(newData)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handlesavePost = (postId) => {
+    savePost(postId)
+      .then((updatedUser) => {
+        const updatedData = data.map((post) => {
+          if (post._id === postId) {
+            return post;
           }
+          return post;
         });
-        setData(newData);
+          dispatch({ type: "SAVED_POST", payload: postId});
+        setData(updatedData);
+        console.log("Updated Data:", updatedData);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error saving post:", err);
       });
   };
-
-  const unlikePost = (id) => {
-    fetch("/unlike", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        // console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result.likes._id) {
-            return result.likes;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const makeComments = (text, postId) => {
-    fetch("/comment", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId,
-        text,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result.comments._id) {
-            return result.comments;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deletepost = (postid, cii) => {
-    // console.log(postid, cii);
-    fetch(`/deletepost/${postid}/${cii}`, {
-      method: "delete",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        cii,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.filter((item) => {
-          return item._id !== result.deletionP._id;
-        });
-        setData(newData);
-      });
-  };
-
-  const share = (postid) => {
-    try {
-      const shareurl = `http://localhost:5000/posts/${postid}`;
-      navigator.clipboard.writeText(shareurl);
-    } catch (error) {
-      console.log(error);
-    }
+  const updateStateAfterOperation = (postId, updatedPostData) => {
+    const updatedData = data.map((post) => {
+      if (post._id === postId) {
+        return updatedPostData;
+      } else {
+        return post;
+      }
+    });
+    setData(updatedData);
   };
 
   return (
     <div className="home">
       {/* =====================story feature comming soon=======================  */}
+
       {/* <div id="story">
         <div className="story">
           <img src="" alt="" className="user-profile" />
@@ -232,7 +152,7 @@ const Home = () => {
                     {
                       // eslint-disable-next-line
                       item.postedBy._id == state._id && (
-                        <button onClick={() => deletepost(item._id, item.cii)}>
+                        <button onClick={() => handleDeletePost(item._id, item.cii)}>
                           <img
                             className="addp-logo"
                             src="https://res.cloudinary.com/dxndplrix/image/upload/v1702498777/intaIcon/k4uptampczd3pc94v35k.png"
@@ -265,7 +185,7 @@ const Home = () => {
                           alt=""
                           className="post-icon"
                           onClick={() => {
-                            unlikePost(item._id);
+                            handleUnlikePost(item._id);
                           }}
                         />
                       ) : (
@@ -274,7 +194,7 @@ const Home = () => {
                           alt=""
                           className="post-icon"
                           onClick={() => {
-                            likePost(item._id);
+                            handleLikePost(item._id);
                           }}
                         />
                       )}
@@ -294,11 +214,12 @@ const Home = () => {
                           alt=""
                           className="post-icon"
                           onClick={() => {
-                            savePost(item._id);
+                            handlesavePost(item._id);
                           }}
                         />
                       )}
                     </div>
+
                     <div className="like intr-item">
                       <img
                         src="https://res.cloudinary.com/dxndplrix/image/upload/v1702923423/intaIcon/iijhp7ydfavelqipin0p.png"

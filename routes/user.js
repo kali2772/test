@@ -164,6 +164,7 @@ router.put("/savepost", requireLogin, (req, res) => {
     )
       /* .populate("comments.postedBy", "_id name pic")
       .populate("postedBy", "_id name pic") */
+      .select("-password -resetToken -expireToken")
       .then((err, result) => {
         if (err) {
           console.log(err);

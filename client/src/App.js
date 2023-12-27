@@ -1,5 +1,7 @@
 /* import logo from './logo.svg';
 import './App.css'; */
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, createContext, useReducer, useContext } from "react";
 import {
   BrowserRouter,
@@ -74,7 +76,7 @@ const Routing = () => {
       <Route path="/Profile/:userid" element={<UserProfile />} />
 
       <Route path="/Posts/:postid" element={<Posts />} />
-      
+
       <Route path="/myFollowingpost" element={<SubscribeUserPost />} />
     </Routes>
   );
@@ -87,6 +89,7 @@ function App() {
     <UserContext.Provider value={{ state, dispatch }}>
       <BrowserRouter>
         <Navbar />
+        <ToastContainer />
         <hr />
         <Routing />
       </BrowserRouter>

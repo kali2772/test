@@ -21,5 +21,8 @@ export const reducer = (state, action) => {
       pic: action.payload,
     };
   }
+  if (action.type == "SAVED_POST") {
+    return { ...state, savedPost: [...state.savedPost, action.payload] };
+  }
   return state;
 };

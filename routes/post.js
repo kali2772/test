@@ -133,7 +133,7 @@ router.put("/like", requireLogin, (req, res) => {
       .populate("postedBy", "_id name pic")
       .then((err, result) => {
         if (err) {
-          console.log(err);
+          // console.log(err);
           return res.status(200).json({ likes: err });
         } else {
           console.log(result, "success");
@@ -163,7 +163,7 @@ router.put("/unlike", requireLogin, (req, res) => {
         if (err) {
           return res.status(200).json({ likes: err });
         } else {
-          console.log(result);
+          // console.log(result);
           res.status(422).json(result);
         }
       });
