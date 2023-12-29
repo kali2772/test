@@ -119,6 +119,7 @@ router.put("/updatepic", requireLogin, (req, res) => {
       const opic = req.body.ocii;
       const opicarr = opic.split("/");
       const ociiarr = opicarr[opicarr.length - 1];
+      
       const checko = opicarr[opicarr.length - 2];
       const ocii = ociiarr.split(".")[0];
       if (checko != "app") {

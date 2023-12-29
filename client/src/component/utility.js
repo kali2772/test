@@ -26,7 +26,7 @@ const useBasicFunc = () => {
     }
   };
   const savePost = (id) => {
-   return fetch("/savepost", {
+    return fetch("/savepost", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const useBasicFunc = () => {
       .then((result) => {
         localStorage.setItem("user", JSON.stringify(result.savepost));
         showToast("post is saved", "success");
-        return result.savepost
+        return result.savepost;
       })
       .catch((err) => {
         console.log(err);
@@ -49,7 +49,7 @@ const useBasicFunc = () => {
   };
   const deletepost = (postid, cii) => {
     // console.log(postid, cii);
-   return fetch(`/deletepost/${postid}/${cii}`, {
+    return fetch(`/deletepost/${postid}/${cii}`, {
       method: "delete",
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -60,8 +60,8 @@ const useBasicFunc = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-      showToast("Post is deleted", "success");
-      return result;
+        showToast("Post is deleted", "success");
+        return result;
       });
   };
   const likePost = (id) => {
@@ -135,7 +135,7 @@ const useBasicFunc = () => {
       });
   }; */
   const makeComments = (text, postId) => {
-    fetch("/comment", {
+    return fetch("/comment", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -148,15 +148,10 @@ const useBasicFunc = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result.comments._id) {
-            return result.comments;
-          } else {
-            return item;
-          }
-        });
+        const newData = result.comments;
+        showToast("comment post", "success");
         setData(newData);
+        return newData;
       })
       .catch((err) => {
         console.log(err);

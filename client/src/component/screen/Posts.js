@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
+import useBasicFunc from "../utility";
 import { UserContext } from "../../App";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../componentCss/explore.css";
 
 const Savedpost = () => {
   const [data, setData] = useState([]);
   // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
+  const navicate = useNavigate();
   const location = useLocation();
   const cu = location.pathname;
 
@@ -22,133 +24,78 @@ const Savedpost = () => {
         setData(result.posts);
       });
   }, [cu]);
-  const likePost = (id) => {
-    fetch("/like", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
+
+  const { share, savePost, likePost, unlikePost, deletepost, makeComments } =
+    useBasicFunc();
+
+  const handleLikePost = (postId) => {
+    likePost(postId)
       .then((result) => {
-        const newData = data.map((item) => {
-          if (item._id === result.likes._id) {
-            return result.likes;
-          } else {
-            return item;
+        updateStateAfterOperation(postId, result);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+  };
+  const handleUnlikePost = (postId) => {
+    unlikePost(postId)
+      .then((result) => {
+        updateStateAfterOperation(postId, result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleCommentPost = (comment, postId) => {
+    makeComments(comment, postId)
+      .then((result) => {
+        updateStateAfterOperation(postId, result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDeletePost = (postId, cii) => {
+    deletepost(postId, cii)
+      .then((result) => {
+        const newData = data.filter(
+          (item) => item._id !== result.deletionP._id
+        );
+        setData(newData);
+        navicate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handlesavePost = (postId) => {
+    savePost(postId)
+      .then((updatedUser) => {
+        const updatedData = data.map((post) => {
+          if (post._id === postId) {
+            return post;
           }
+          return post;
         });
-        setData(newData);
+        dispatch({ type: "SAVED_POST", payload: postId });
+        setData(updatedData);
+        console.log("Updated Data:", updatedData);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error saving post:", err);
       });
   };
-  const share = (postid) => {
-    try {
-      const shareurl = `http://localhost:3000/posts/${postid}`;
-      navigator.clipboard.writeText(shareurl);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const savePost = (id) => {
-    fetch("/savepost", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log("savepost", result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const unlikePost = (id) => {
-    fetch("/unlike", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        // console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result.likes._id) {
-            return result.likes;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const deletepost = (postid, cii) => {
-    // console.log(postid, cii);
-    fetch(`/deletepost/${postid}/${cii}`, {
-      method: "delete",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        cii,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.filter((item) => {
-          return item._id !== result.deletionP._id;
-        });
-        setData(newData);
-      });
-  };
-  const makeComments = (text, postId) => {
-    fetch("/comment", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId,
-        text,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result.comments._id) {
-            return result.comments;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const updateStateAfterOperation = (postId, updatedPostData) => {
+    const updatedData = data.map((post) => {
+      if (post._id === postId) {
+        return updatedPostData;
+      } else {
+        return post;
+      }
+    });
+    setData(updatedData);
   };
   return (
     <div id="main " className="post-main">
@@ -166,7 +113,7 @@ const Savedpost = () => {
                 item.postedBy._id == state._id && (
                   <button
                     className="post-delete"
-                    onClick={() => deletepost(item._id, item.cii)}
+                    onClick={() => handleDeletePost(item._id, item.cii)}
                   >
                     <img
                       className="addp-logo"
@@ -185,18 +132,19 @@ const Savedpost = () => {
                     <img
                       src="https://res.cloudinary.com/dxndplrix/image/upload/v1702498777/intaIcon/dwezu95opublhnp3nzdt.png"
                       alt=""
-                      className="post-icon posticonic"
+                      className="post-icon"
                       onClick={() => {
-                        unlikePost(item._id);
+                        handleUnlikePost(item._id);
                       }}
                     />
                   ) : (
                     <img
                       src="https://res.cloudinary.com/dxndplrix/image/upload/v1702498777/intaIcon/nvcseljlaxcj9hiolzwg.png"
                       alt=""
-                      className="post-icon posticonic"
+                      style={{filter: "invert(0)"}}
+                      className="post-icon"
                       onClick={() => {
-                        likePost(item._id);
+                        handleLikePost(item._id);
                       }}
                     />
                   )}
@@ -215,7 +163,7 @@ const Savedpost = () => {
                       alt=""
                       className="post-icon"
                       onClick={() => {
-                        savePost(item._id);
+                        handlesavePost(item._id);
                       }}
                     />
                   )}
@@ -252,7 +200,7 @@ const Savedpost = () => {
                         ? "/profile/" + item.postedBy._id
                         : "/profile"
                     }
-                    style={{color: "#1b1a1a"}}
+                    style={{ color: "#1b1a1a" }}
                   >
                     <img
                       src={item.postedBy.pic}
@@ -275,7 +223,7 @@ const Savedpost = () => {
                     className="comment-form"
                     onSubmit={(e) => {
                       e.preventDefault();
-                      makeComments(e.target[0].value, item._id);
+                      handleCommentPost(e.target[0].value, item._id);
                     }}
                   >
                     <input

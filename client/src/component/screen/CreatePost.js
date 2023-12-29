@@ -1,66 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useBasicFunc from "../utility";
 import "../../componentCss/createpost.css";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
-  const [url, setUrl] = useState("");
-  const [cii, setCII] = useState("");
   const navicate = useNavigate();
+  const { showToast } = useBasicFunc();
 
-  useEffect(() => {
-    if (url || cii) {
-      fetch("createpost", {
+  const handleCreatePost = () => {
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("body", body);
+
+    if (image && title && body) {
+      fetch("/createpostfile", {
         method: "post",
         headers: {
-          "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
-        body: JSON.stringify({
-          title,
-          body,
-          pic: url,
-          cii,
-        }),
+        body: formData,
       })
         .then((res) => res.json())
         .then((data) => {
+          navicate("/");
           if (data.error) {
-            console.log(data);
+            console.log(data.error);
+            showToast(data.error, "error");
           } else {
-            console.log(data);
-            navicate("/");
+            showToast(data.message, "success");
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Error:", err);
         });
+    } else {
+      showToast("please add all fields", "error");
     }
     // eslint-disable-next-line
-  }, [url,cii]);
-
-  const postDetails = () => {
-    const data = new FormData();
-    data.append("file", image);
-    data.append("upload_preset", "instaClone");
-    data.append("cloud_name", "dxndplrix");
-    fetch("https://api.cloudinary.com/v1_1/dxndplrix/image/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Public ID:", data.public_id);
-        setCII(data.public_id);
-        setUrl(data.url);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
-  
 
   return (
     <div id="create">
@@ -103,9 +84,15 @@ const CreatePost = () => {
               onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
-          <button type="submit" className="subtn" onClick={() => postDetails()}>
-            post
-          </button>
+          {
+            <button
+              type="submit"
+              className="subtn"
+              onClick={() => handleCreatePost()}
+            >
+              post
+            </button>
+          }
         </div>
       </div>
     </div>

@@ -4,6 +4,18 @@ const mongoose = require("mongoose");
 const requireLogin = require("../middleware/requireLogin");
 const Post = mongoose.model("Post");
 const cloudinary = require("../cloudinary");
+const fileUpload = require("express-fileupload");
+
+router.use(express.json({ limit: "50mb" }));
+router.use(express.urlencoded({ extended: true, limit: "50mb" }));
+router.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp", // Specify the directory where temporary files are stored
+    createParentPath: true, // Ensure the directory structure exists
+    cleanup: true,
+  })
+);
 
 router.get("/allpost", requireLogin, (req, res) => {
   Post.find()
@@ -64,22 +76,6 @@ router.get("/posts/:postId", requireLogin, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-/* router.get("/posts/:postId", requireLogin, async (req, res) => {
-  try {
-    await Post.findOne({ _id: req.params.postId })
-      .populate("postedBy", "_id name pic")
-      .populate("comments.postedBy", "_id name pic")
-      .then((posts) => {
-        res.json({ posts });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } catch (error) {
-    console.error("Error fetching post:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-}); */
 
 router.get("/mypost", requireLogin, (req, res) => {
   Post.find({ postedBy: req.user._id })
@@ -93,29 +89,44 @@ router.get("/mypost", requireLogin, (req, res) => {
     });
 });
 
-router.post("/createpost", requireLogin, (req, res) => {
-  const { title, body, pic, cii } = req.body;
-  if (!title || !body || !pic) {
-    console.log(title, body, pic);
-    return res.status(422).json({ error: "please add all the fields" });
-  }
+router.post("/createpostfile", requireLogin, (req, res) => {
+  const { title, body } = req.body;
+  const { image } = req.files;
   req.user.password = undefined;
 
-  const post = new Post({
-    title,
-    body,
-    photo: pic,
-    postedBy: req.user,
-    cii,
-  });
-  post
-    .save()
-    .then((result) => {
-      res.json({ post: result });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  cloudinary.uploader.upload(
+    image.tempFilePath,
+    { format: "webp" },
+    (err, result) => {
+      const cii = result.public_id;
+      const photo = result.url;
+      /* //uncoment this and comment formate in cloudinaryand also upper line  if you not want to send low quality
+        const photFormate = result.format;
+        const photo =
+          "https://res.cloudinary.com/dxndplrix/image/upload/f_auto,q_auto:eco/v1703858895/" +
+          cii +
+          "." +
+          photFormate; */
+      const post = new Post({
+        title,
+        body,
+        photo,
+        postedBy: req.user,
+        cii,
+      });
+      post
+        .save()
+        .then((result) => {
+          res.json({ post: result, message: "Post created successfully" });
+        })
+        .catch((err) => {
+          console.log(err);
+          res
+            .status(500)
+            .json({ error: "something went wrong please try again later" });
+        });
+    }
+  );
 });
 
 router.put("/like", requireLogin, (req, res) => {

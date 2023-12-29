@@ -22,7 +22,6 @@ const Home = () => {
       });
   }, []);
   const {
-    showToast,
     share,
     savePost,
     likePost,
@@ -42,6 +41,15 @@ const Home = () => {
   };
   const handleUnlikePost = (postId) => {
     unlikePost(postId)
+      .then((result) => {
+        updateStateAfterOperation(postId, result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleCommentPost = (comment,postId) => {
+    makeComments(comment,postId)
       .then((result) => {
         updateStateAfterOperation(postId, result);
       })
@@ -246,7 +254,7 @@ const Home = () => {
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
-                          makeComments(e.target[0].value, item._id);
+                          handleCommentPost(e.target[0].value, item._id);
                         }}
                       >
                         <input className="commenti" type="text" />
