@@ -1,10 +1,9 @@
 // toastUtils.js
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-
 const useBasicFunc = () => {
   const [data, setData] = useState([]);
-
+  const WEB_URL = process.env.WEB_URL || "https://sizugram.onrender.com";
   const showToast = (msg, toastType) => {
     toast[toastType](msg, {
       position: "top-center",
@@ -17,7 +16,7 @@ const useBasicFunc = () => {
   };
   const share = (postid) => {
     try {
-      const shareurl = `http://localhost:5000/posts/${postid}`;
+      const shareurl = `${WEB_URL}/posts/${postid}`;
       navigator.clipboard.writeText(shareurl);
       showToast("Copied to clipboard", "success");
     } catch (error) {
