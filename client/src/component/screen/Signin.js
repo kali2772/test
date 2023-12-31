@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
-import {UserContext} from "../../App"
+import { UserContext } from "../../App";
 import { Link, useNavigate } from "react-router-dom";
 import "../../componentCss/signin.css";
+import useBasicFunc from "../utility";
 
 const Signin = () => {
   // eslint-disable-next-line
@@ -9,6 +10,7 @@ const Signin = () => {
   const navicate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { showToast } = useBasicFunc();
 
   const PostData = () => {
     fetch("signin", {
@@ -24,17 +26,19 @@ const Signin = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          console.log(data);
+          showToast(data.error, "error");
         } else {
           localStorage.setItem("jwt", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
           dispatch({ type: "USER", payload: data.user });
           // console.log(data);
+          showToast("you loggin successfully", "success");
           navicate("/");
         }
       })
       .catch((err) => {
-        console.log(err);
+        showToast("something went wrong plz try again letter", "error");
+        // console.log("error", err);
       });
   };
 

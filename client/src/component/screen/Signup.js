@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useBasicFunc from "../utility";
 import "../../componentCss/signup.css";
 
 const Signup = () => {
@@ -7,6 +8,7 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { showToast } = useBasicFunc();
   const [image, setImage] = useState("");
   const [url, setUrl] = useState(undefined);
   useEffect(() => {
@@ -48,12 +50,15 @@ const Signup = () => {
       .then((data) => {
         if (data.error) {
           console.log(data);
+          showToast(data.error, "error");
         } else {
           console.log(data);
+          showToast("you signup successfully", "success");
           navicate("/signin");
         }
       })
       .catch((err) => {
+        showToast("something went wrong plz try again letter", "error");
         console.log(err);
       });
   };

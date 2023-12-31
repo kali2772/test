@@ -5,7 +5,7 @@ const User = mongoose.model("User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const { JWT_SECRET, SANDGRID_API_KEY } = require("../config/keys");
+const { JWT_SECRET, SANDGRID_API_KEY, WEB_URL } = require("../config/keys");
 const requirelogin = require("../middleware/requireLogin");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
@@ -23,73 +23,76 @@ router.post("/signup", (req, res) => {
   const { name, email, password, pic } = req.body;
   if (!email || !password || !name) {
     return res.status(422).json({ error: "please add all the fields" });
-  }
-  User.findOne({ email: email })
-    .then((savedUser) => {
-      if (savedUser) {
-        return res
-          .status(422)
-          .json({ error: "user already exist with this email" });
-      }
-      bcrypt.hash(password, 12).then((hashpassword) => {
-        const user = new User({
-          email,
-          password: hashpassword,
-          name,
-          pic,
-        });
-        user
-          .save()
-          .then((user) => {
-            transporter.sendMail({
-              to: user.email,
-              from: "huk971516@gmail.com",
-              subject: "signup success",
-              html: "<h1>welcome to instaclone</h1>",
-            });
-            res.json({
-              message: "saved successfully",
-            });
-          })
-          .catch((err) => {
-            console.log(err);
+  } else {
+    User.findOne({ email: email })
+      .then((savedUser) => {
+        if (savedUser) {
+          return res
+            .status(422)
+            .json({ error: "user already exist with this email" });
+        }
+        bcrypt.hash(password, 12).then((hashpassword) => {
+          const user = new User({
+            email,
+            password: hashpassword,
+            name,
+            pic,
           });
+          user
+            .save()
+            .then((user) => {
+              transporter.sendMail({
+                to: user.email,
+                from: "huk971516@gmail.com",
+                subject: "signup success",
+                html: "<h1>welcome to instaclone</h1>",
+              });
+              res.json({
+                message: "saved successfully",
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }
 });
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(422).json({ error: "please provide email or password" });
+  } else {
+    User.findOne({ email: email }).then((savedUser) => {
+      if (!savedUser) {
+        return res.status(422).json({ error: "invalid username or password" });
+      }
+      bcrypt
+        .compare(password, savedUser.password)
+        .then((doMatch) => {
+          if (doMatch) {
+            // res.json({message:"successfully signin"})
+            const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
+            const { _id, name, email, followers, following, pic, savedPost } =
+              savedUser;
+            res.json({
+              token,
+              user: { _id, name, email, followers, following, pic, savedPost },
+            });
+          } else {
+            return res.status(422).json({ error: "invalid email or password" });
+          }
+        })
+        .catch((err) => {
+          console.log("Bcrypt comparison error:", err);
+          return res.status(500).json({ error: "Internal Server Error" });
+        });
+    });
   }
-  User.findOne({ email: email }).then((savedUser) => {
-    if (!savedUser) {
-      res.status(422).json({ error: "invalid username or password" });
-    }
-    bcrypt
-      .compare(password, savedUser.password)
-      .then((doMatch) => {
-        if (doMatch) {
-          // res.json({message:"successfully signin"})
-          const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
-          const { _id, name, email, followers, following, pic, savedPost } =
-            savedUser;
-          res.json({
-            token,
-            user: { _id, name, email, followers, following, pic, savedPost },
-          });
-        } else {
-          return res.status(422).json({ error: "invalid email or password" });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
 });
 
 router.post("/reset-password", (req, res) => {
@@ -111,7 +114,7 @@ router.post("/reset-password", (req, res) => {
           subject: "reset password",
           html: `
           <p>you  requested for password reset</p>
-          <h5>click in <a href="http://localhost:3000/reset/${token}">link</a></h5>
+          <h5>click in <a href="${WEB_URL}/reset/${token}">link</a></h5>
           `,
         });
         res.json({ massage: "check your mail" });
@@ -141,25 +144,5 @@ router.post("/new-password", (req, res) => {
       console.log(err);
     });
 });
-/* router.post("/updatePic", async (req, res) => {
-  try {
-    const { userId, pic } = req.body;
-    if (!userId) {
-      return res.status(422).json({ error: "dont get id" });
-    }
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(422).json({ error: "user not" });
-    } else {
-      user.pic = pic;
-      await user.save(); 
-      res.json({ message: "saved successfully" });
-      
-    }
-  } catch (error) {
-    res.json({ message: "saved successfully" });
-    console.log(error);
-  }
-}); */
 
 module.exports = router;

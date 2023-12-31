@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../componentCss/signin.css";
+import useBasicFunc from "../utility";
 
 const Reset = () => {
   const navicate = useNavigate();
   const [email, setEmail] = useState("");
+  const { showToast } = useBasicFunc();
 
   const PostData = () => {
     fetch("/reset-password", {
@@ -19,14 +21,17 @@ const Reset = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          console.log(data);
+          showToast(data.error, "error");
+          // console.log(data);
         } else {
-          console.log(data);
+          showToast(data.massage, "success");
+          // console.log(data);
           navicate("/signin");
         }
       })
       .catch((err) => {
-        console.log(err);
+        showToast("something went wrong plz try again letter", "error");
+        // console.log("error", err);
       });
   };
 
@@ -43,8 +48,12 @@ const Reset = () => {
         />
 
         <br />
-        
-        <button onClick={() => PostData()} className="btn" style={{width:"auto"}}>
+
+        <button
+          onClick={() => PostData()}
+          className="btn"
+          style={{ width: "auto" }}
+        >
           reset-password
         </button>
       </div>

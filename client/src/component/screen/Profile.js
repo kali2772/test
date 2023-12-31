@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import "../../componentCss/profile.css";
 import { Link } from "react-router-dom";
+import useBasicFunc from "../utility";
 import { UserContext } from "../../App";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const { state, dispatch } = useContext(UserContext);
   const [image, setImage] = useState("");
+  const { showToast } = useBasicFunc();
 
   useEffect(() => {
     fetch("/mypost", {
@@ -20,7 +22,7 @@ const Profile = () => {
       });
   }, []);
 
-  useEffect(() => {
+  const updateDp = () => {
     if (image) {
       const data = new FormData();
       data.append("file", image);
@@ -45,24 +47,22 @@ const Profile = () => {
           })
             .then((res) => res.json())
             .then((result) => {
-              console.log(result);
+              // console.log(result);
               localStorage.setItem(
                 "user",
                 JSON.stringify({ ...state, pic: result.pic })
               );
               dispatch({ type: "UPDATEPIC", payload: result.pic });
+              showToast("pic update successfully", "success");
             });
         })
 
         .catch((err) => {
+          showToast("error", "error");
           console.log(err);
         });
       // console.log(url, "heloo");
     } // eslint-disable-next-line
-  }, [image]);
-
-  const updatePic = (file) => {
-    setImage(file);
   };
 
   return (
@@ -105,20 +105,20 @@ const Profile = () => {
               <h2>{state ? state.name : "process.."}</h2>
               <h3>{state ? state.email : "process.."}</h3>
               {/* {console.log(state)} */}
-              <h3>_username</h3>
+              {/* <h3>_username</h3> */}
               <input
                 type="file"
                 name="createpost"
                 id=""
-                onChange={(e) => updatePic(e.target.files[0])}
+                onChange={(e) => setImage(e.target.files[0])}
               />
+              <button onClick={() => updateDp()}>edit</button>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate vel expedita dolorum velit dolor harum minima a
                 laboriosam voluptatibus nostrum, vitae autem, unde veritatis
                 necessitatibus aperiam pariatur natus aspernatur iste.
               </p>
-              {/* {<button onClick={newPIc}>up</button>} */}
             </div>
           </div>
           <hr />
