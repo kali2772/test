@@ -33,9 +33,8 @@
   align-self: flex-end;
 }
 @media only screen and (max-width: 600px) {
-  
   #create {
-    width: 100vw;
+    width: 96vw;
     height: 87vh;
     display: flex;
     justify-content: center;
